@@ -2,6 +2,10 @@ package com.fitness_monolith.fitness.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     // 🔑 Primary Key (UUID)

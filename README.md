@@ -1,71 +1,74 @@
-🏋️‍♂️ Fitness Tracker Application – Spring Boot
+# 🏋️‍♂️ Fitness Tracker Application – Spring Boot
 
-🚀 Real-world Spring Boot project built end-to-end to master backend development, security, and deployment.
+🚀 A real-world **Spring Boot backend project** built end-to-end to master backend development, security, and deployment.
 
-🔥 What I Built
+---
 
-A complete Fitness Tracker REST API with:
+## 🔥 What I Built
 
-👤 User authentication & authorization
+A complete **Fitness Tracker REST API** with the following features:
 
-🏃 Activity tracking
+- 👤 User authentication & authorization  
+- 🏃 Activity tracking  
+- 🤖 Personalized fitness recommendations  
+- 🔐 Secure, role-based APIs  
+- ☁️ Dockerized & cloud-deployed application  
 
-🤖 Personalized fitness recommendations
+---
 
-🔐 Secure, role-based APIs
+## 🧠 Core Concepts I Learned
 
-☁️ Dockerized & cloud-deployed application
+### ⚙️ Backend & Architecture
 
-🧠 Core Concepts I Learned
-⚙️ Backend & Architecture
+- 🌱 Spring Boot fundamentals & clean project setup  
+- 🗄️ Database design using **JPA & Hibernate**  
+- 🔄 **DTO Pattern**  
+- 🧱 **Builder Pattern**  
+- ✨ **Lombok** for clean & readable code  
 
-🌱 Spring Boot fundamentals & clean project setup
+---
 
-🗄️ Database design using JPA & Hibernate
+### 🔐 Security (Major Focus)
 
-🔄 DTO Pattern & 🧱 Builder Pattern
+- 🔑 Spring Security (from basics → advanced)  
+- 🪪 **JWT Authentication & Authorization**  
+- 🧩 **Role-Based Access Control (RBAC)**  
+- 🔒 Password encryption using **BCrypt**  
+- 🧪 Method-level & API-level security  
 
-✨ Lombok for clean & readable code
+---
 
-🔐 Security (Major Focus)
+### 📡 REST & API Design
 
-🔑 Spring Security (from basics → advanced)
+- 🌐 RESTful API design with best practices  
+- 📝 Input validation using **Bean Validation**  
+- 📖 **Swagger / OpenAPI** documentation  
 
-🪪 JWT Authentication & Authorization
+---
 
-🧩 Role-Based Access Control (RBAC)
+### 🐳 DevOps & Deployment
 
-🔒 Password encryption using BCrypt
+- 🐳 Dockerizing the Spring Boot application  
+- ☁️ Free cloud deployment  
+- 🛢️ **MySQL** database integration  
 
-🧪 Method-level & API-level security
+---
 
-📡 REST & API Design
+## 🏁 Final Outcome
 
-🌐 RESTful APIs with best practices
+- ✅ Production-ready Spring Boot REST API  
+- ✅ Strong understanding of Security, JWT & RBAC  
+- ✅ Hands-on experience with Docker & deployment  
+- ✅ Confidence to build real-world backend systems  
 
-📝 Input validation with Bean Validation
+---
 
-📖 Swagger / OpenAPI documentation
+## 🎓 Reference
 
-🐳 DevOps & Deployment
+- 📺 **Course:** Spring Boot Fitness Tracker Application  
+- 👨‍🏫 **Instructor:** Faisal  
+- 🔗 **YouTube:** https://www.youtube.com/watch?v=NViOWCfROQk  
 
-🐳 Dockerizing Spring Boot application
+---
 
-☁️ Free cloud deployment
-
-🛢️ MySQL database integration
-
-🏁 Final Outcome
-
-✅ Production-ready Spring Boot REST API
-✅ Strong understanding of security, JWT & RBAC
-✅ Hands-on experience with Docker & deployment
-✅ Confidence to build real-world backend systems
-
-🎓 Reference
-
-📺 Course: Spring Boot Fitness Tracker Application
-👨‍🏫 Instructor: Faisal
-🔗 https://www.youtube.com/watch?v=NViOWCfROQk
-
-💡 This project represents my hands-on journey from Spring Boot basics to production-grade backend development.
+💡 This project represents my hands-on journey from **Spring Boot basics** to **production-grade backend development**.

@@ -1,6 +1,9 @@
 # 🏋️‍♂️ Fitness Tracker Application – Spring Boot
 
-🚀 A real-world **Spring Boot backend project** built end-to-end to master backend development, security, and deployment.
+![Fitness Tracker Banner](images/fitness-tracker.png)
+
+🚀 A real-world Spring Boot backend project built end-to-end to master backend development.
+ built end-to-end to master backend development, security, and deployment.
 
 ---
 
@@ -72,3 +75,4 @@ A complete **Fitness Tracker REST API** with the following features:
 ---
 
 💡 This project represents my hands-on journey from **Spring Boot basics** to **production-grade backend development**.
+

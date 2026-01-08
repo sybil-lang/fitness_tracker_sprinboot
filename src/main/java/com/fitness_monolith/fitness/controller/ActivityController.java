@@ -32,12 +32,12 @@ public class ActivityController {
         return ResponseEntity.ok(response);
     }
 
-//    /*
-//      GET /api/activities
-//     - Retrieve all activities
-//    */
-//    @GetMapping
-//    public List<Activity> getAllActivities() {
-//        return activityService.getAllActivities();
-//    }
+    /*
+      GET /api/activities
+     - Retrieve all activities
+    */
+    @GetMapping
+    public ResponseEntity<List<ActivityResponse>> getUserActivities(@RequestHeader (value="X-User-ID") String userId) {
+        return ResponseEntity.ok(activityService.getUserActivities(userId));
+    }
 }

@@ -1,15 +1,10 @@
 package com.fitness_monolith.fitness.controller;
-
-
 import com.fitness_monolith.fitness.dto.RecommendationRequest;
-import com.fitness_monolith.fitness.dto.RegisterRequest;
-import com.fitness_monolith.fitness.dto.UserResponse;
 import com.fitness_monolith.fitness.model.Recommendation;
 import com.fitness_monolith.fitness.service.RecommendationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController

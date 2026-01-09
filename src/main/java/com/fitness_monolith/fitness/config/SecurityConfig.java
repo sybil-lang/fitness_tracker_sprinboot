@@ -18,7 +18,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http){
         http.authorizeHttpRequests(authorizeRequests->
-                        authorizeRequests.anyRequest().authenticated());
+                authorizeRequests.requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
+                .anyRequest().authenticated());
 
         http.httpBasic(Customizer.withDefaults());
         return http.build();
@@ -27,10 +29,12 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(){
         UserDetails user1= User.withUsername("user1")
-                .password("{noop}password1")
+                .password("{noop}user1")
+                .roles("USER")
                 .build();
-        UserDetails user2= User.withUsername("user2")
-                .password("{noop}password2")
+        UserDetails user2= User.withUsername("admin")
+                .password("{noop}admin")
+                .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(user1,user2);
     }

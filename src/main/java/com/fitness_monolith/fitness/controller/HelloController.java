@@ -1,5 +1,6 @@
 package com.fitness_monolith.fitness.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,6 +12,10 @@ public class HelloController {
     }
 
 
+
+    //This is Method-Level Security: Securing Individual API Endpoints
+//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/admin/hello")
     public String sayAdminHello(){
         return "Hello Admin!";

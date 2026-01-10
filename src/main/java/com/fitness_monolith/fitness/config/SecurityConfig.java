@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,6 +24,11 @@ import javax.sql.DataSource;
 public class SecurityConfig {
     @Autowired
     DataSource dataSource;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http){
@@ -49,16 +56,18 @@ public class SecurityConfig {
         JdbcUserDetailsManager manager =
                 new JdbcUserDetailsManager(dataSource);
 
-        if (!manager.userExists("user1")) {
-            manager.createUser(User.withUsername("user1")
-                    .password("{noop}user1")
+        if (!manager.userExists("user2")) {
+            manager.createUser(User.withUsername("user2")
+//                    .password("{noop}user1")
+                            .password(passwordEncoder().encode("user2"))
                     .roles("USER")
                     .build());
         }
 
-        if (!manager.userExists("admin")) {
-            manager.createUser(User.withUsername("admin")
-                    .password("{noop}admin")
+        if (!manager.userExists("admin1")) {
+            manager.createUser(User.withUsername("admin1")
+//                    .password("{noop}admin")
+                    .password(passwordEncoder().encode("admin1"))
                     .roles("ADMIN")
                     .build());
         }
@@ -66,6 +75,8 @@ public class SecurityConfig {
         return manager;
 
     }
+
+
 }
 
 

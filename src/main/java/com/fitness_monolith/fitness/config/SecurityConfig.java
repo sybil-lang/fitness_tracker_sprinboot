@@ -3,7 +3,9 @@ package com.fitness_monolith.fitness.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -31,15 +33,30 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http){
-        http.authorizeHttpRequests(authorizeRequests->
-                authorizeRequests.requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
-                .anyRequest().authenticated());
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.httpBasic(Customizer.withDefaults());
+        http
+                // ❌ Disable CSRF for stateless APIs (JWT)
+                .csrf(csrf -> csrf.disable())
+
+                .authorizeHttpRequests(auth -> auth
+                        // 🔓 Public endpoints (NO authentication)
+                        .requestMatchers("/signin", "/hello").permitAll()
+
+                        // 🔐 Role-based access
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+
+                        // 🔒 Everything else needs authentication
+                        .anyRequest().authenticated()
+                )
+
+                // ❌ Disable basic auth if using JWT
+                .httpBasic(Customizer.withDefaults());
+
         return http.build();
     }
+
 
     @Bean
     public UserDetailsService userDetailsService(){
@@ -75,6 +92,12 @@ public class SecurityConfig {
         return manager;
 
     }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration builder){
+        return builder.getAuthenticationManager();
+    }
+
 
 
 }

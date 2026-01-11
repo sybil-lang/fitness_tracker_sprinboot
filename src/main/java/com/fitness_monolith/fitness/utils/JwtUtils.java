@@ -11,8 +11,10 @@ import java.util.Date;
 @Component
 public class JwtUtils {
 
-    private  String jwtSecret="sgdg-w3hcb@23n3u3w-3fbf";
-    private int jwtExpiration=172800000;
+    private static final String jwtSecret =
+            "QXNkZjEyMzRAIUAjJCRmKigpXy1Kd3RTZWNyZXRLZXlfNTEyX2JpdF9sb25n";
+
+    private static final int jwtExpiration=172800000;
 
     public String getJwtFromHeader(){
         return "";

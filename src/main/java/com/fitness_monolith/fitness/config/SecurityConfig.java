@@ -1,5 +1,6 @@
 package com.fitness_monolith.fitness.config;
 
+import com.fitness_monolith.fitness.utils.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -24,19 +26,28 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    @Autowired
-    DataSource dataSource;
+//    @Autowired
+//    DataSource dataSource;
+//
+//    @Autowired
+//    private AuthTokenFilter authTokenFilter;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    private final DataSource dataSource;
+    private final AuthTokenFilter authTokenFilter;
+
+    //  Constructor Injection
+    public SecurityConfig(DataSource dataSource, AuthTokenFilter authTokenFilter) {
+        this.dataSource = dataSource;
+        this.authTokenFilter = authTokenFilter;
     }
+
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                // ❌ Disable CSRF for stateless APIs (JWT)
+                //  Disable CSRF for stateless APIs (JWT)
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
@@ -51,47 +62,15 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                // ❌ Disable basic auth if using JWT
+                //  Add custom JWT/Auth filter
+                .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class)
+
+                //  Disable basic auth (JWT based)
                 .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
 
-
-    @Bean
-    public UserDetailsService userDetailsService(){
-//        UserDetails user1= User.withUsername("user1")
-//                .password("{noop}user1")
-//                .roles("USER")
-//                .build();
-//        UserDetails user2= User.withUsername("admin")
-//                .password("{noop}admin")
-//                .roles("ADMIN")
-//                .build();
-//        return new InMemoryUserDetailsManager(user1,user2);
-
-        JdbcUserDetailsManager manager =
-                new JdbcUserDetailsManager(dataSource);
-
-        if (!manager.userExists("user2")) {
-            manager.createUser(User.withUsername("user2")
-//                    .password("{noop}user1")
-                            .password(passwordEncoder().encode("user2"))
-                    .roles("USER")
-                    .build());
-        }
-
-        if (!manager.userExists("admin1")) {
-            manager.createUser(User.withUsername("admin1")
-//                    .password("{noop}admin")
-                    .password(passwordEncoder().encode("admin1"))
-                    .roles("ADMIN")
-                    .build());
-        }
-
-        return manager;
-
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration builder){

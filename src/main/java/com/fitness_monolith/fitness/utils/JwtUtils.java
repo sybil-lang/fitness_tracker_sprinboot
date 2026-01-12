@@ -1,18 +1,18 @@
 package com.fitness_monolith.fitness.utils;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.security.SignatureException;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtils {
@@ -39,9 +39,15 @@ public class JwtUtils {
         return null;
     }
 
-    public String generateTokenFromUsername(String userName){
+    public String generateTokenFromUsername(UserDetails userDetails){
+        List<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
         return Jwts.builder()
-                .subject(userName)
+                .subject(userDetails.getUsername())
+                .claim("roles", roles)
                 .issuedAt(new Date())
                 .expiration(new Date(new Date().getTime()+jwtExpiration))
                 .signWith(key())
@@ -79,4 +85,61 @@ public class JwtUtils {
                 .getPayload()
                 .getSubject();
     }
+
+    //Extract the roles (authorities) stored inside the JWT claims and return them as a List<String> that Spring Security can understand.
+
+    public List<String> getRolesFromJwtToken(String token) {
+
+        Claims claims =
+                Jwts.parser()  //creates a JWT parser
+
+                .verifyWith((SecretKey) key()) //verifies the JWT signature .Ensures token is not tampered
+
+
+                .build()
+
+                 //Validates signature  -> Validates token structure -> Validates expiration
+                .parseSignedClaims(token)
+
+                 //Extracts the payload (claims) of the JWT
+                .getBody();
+
+
+        /*
+        After this line, you now have access to:
+        {
+          "sub": "moon",
+          "roles": ["ROLE_USER", "ROLE_ADMIN"],
+          "iat": 1704954000,
+          "exp": 1704957600
+        }
+        stored inside claims.
+
+        */
+
+        /*
+        Read the roles claim
+        Why Object?
+        1.JWT claims are stored as generic JSON
+        2.Java doesn’t know the exact type at runtime.So we first retrieve it as Object
+        At this point : rolesObj might be: List<String> or List<Object> or null (if claim missing)
+        * */
+        Object rolesObj = claims.get("roles");
+
+
+        //Here we are checking Is rolesObj actually a List?
+        //If yes → safely assign it to rolesList
+        //List<?> rolesList is a Java generics wildcard declaration
+        if (rolesObj instanceof List<?> rolesList) {
+
+            return
+                    rolesList.stream()
+                    .map(String::valueOf)
+                    .toList();
+        }
+
+        return List.of(); // fallback – no roles
+    }
+
+
 }

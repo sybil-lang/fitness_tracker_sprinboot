@@ -6,6 +6,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,6 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import java.util.List;
 
 
 @Component
@@ -27,6 +30,27 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
     }
+
+    /*
+
+    Incoming HTTP Request
+        ↓
+    AuthTokenFilter (this method)
+            ↓
+    Extract & validate JWT
+            ↓
+    Build Authentication object
+            ↓
+    Store it in SecurityContext
+            ↓
+    Controller / @PreAuthorize
+
+
+
+This filter extracts and validates the JWT from the request, builds a Spring Security Authentication object using username and roles stored in JWT claims, and stores it in the SecurityContext for authorizatio
+     */
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -45,23 +69,28 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 // 3️⃣ Extract username from JWT
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
-                // 4️⃣ Load user details from DB
-                UserDetails userDetails =
-                        userDetailsService.loadUserByUsername(username);
+                // 4️⃣ Extract roles from JWT claims
+                List<String> roles = jwtUtils.getRolesFromJwtToken(jwt);
 
-                // 5️⃣ Create Authentication object
+                // 5️⃣ Convert roles to GrantedAuthority
+                List<SimpleGrantedAuthority> authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
+
+                // 6️⃣ Create Authentication object
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
-                                userDetails,
+                                username,
                                 null,
-                                userDetails.getAuthorities()
+                                authorities
                         );
 
+                //Attach request details like IP address oor Session ID
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
 
-                // 6️⃣ Set authentication in SecurityContext
+                // 7️⃣ Save authentication in SecurityContext
                 SecurityContextHolder.getContext()
                         .setAuthentication(authentication);
             }

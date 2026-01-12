@@ -82,7 +82,7 @@ public class HelloController {
 
             // Generate JWT token
             return jwtUtils.generateTokenFromUsername(
-                    userDetails.getUsername());
+                    userDetails);
 
         } catch (AuthenticationException e) {
             return " Invalid username or password";

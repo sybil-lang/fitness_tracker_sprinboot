@@ -22,9 +22,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.sql.DataSource;
 
-@Configuration
-@EnableWebSecurity
-@EnableMethodSecurity
+//@Configuration
+//@EnableWebSecurity
+//@EnableMethodSecurity
 public class SecurityConfig {
 //    @Autowired
 //    DataSource dataSource;
@@ -51,14 +51,16 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        // 🔓 Public endpoints (NO authentication)
+                        //  Public endpoints (NO authentication)
                         .requestMatchers("/signin", "/hello").permitAll()
 
-                        // 🔐 Role-based access
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/auth/**").permitAll()
+
+                        // Role-based access
+                        .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
 
-                        // 🔒 Everything else needs authentication
+                        //  Everything else needs authentication
                         .anyRequest().authenticated()
                 )
 

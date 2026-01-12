@@ -1,10 +1,14 @@
 package com.fitness_monolith.fitness.service;
 
+import com.fitness_monolith.fitness.dto.FitnessLoginRequest;
 import com.fitness_monolith.fitness.dto.RegisterRequest;
 import com.fitness_monolith.fitness.dto.UserResponse;
 import com.fitness_monolith.fitness.model.User;
+import com.fitness_monolith.fitness.model.UserRole;
 import com.fitness_monolith.fitness.respositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,8 +16,9 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private  final UserRepository userRepository;
+    private  final PasswordEncoder passwordEncoder;
 
-    private UserResponse mapToUserResponse(User savedUser) {
+    public UserResponse mapToUserResponse(User savedUser) {
 
         UserResponse response = new UserResponse();
 
@@ -27,6 +32,12 @@ public class UserService {
     }
 
     public UserResponse register(RegisterRequest request) {
+
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+
 //        // Create new User entity
 //        User user = new User();
 //
@@ -43,7 +54,9 @@ public class UserService {
                 .email(request.getEmail())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(UserRole.USER) // 🔐 ALWAYS USER
+//                .password(request.getPassword())
                 .build();
 
 
@@ -53,4 +66,18 @@ public class UserService {
         return mapToUserResponse(savedUser);
 
     }
+
+    // LOGIN AUTH
+    public User authenticate(FitnessLoginRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new BadCredentialsException("Invalid email"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Invalid password");
+        }
+
+        return user;
+    }
+
 }

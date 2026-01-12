@@ -29,6 +29,16 @@ public class HelloController {
         this.jwtUtils = jwtUtils;
     }
 
+    @GetMapping("/generate")
+    public String generate() {
+        Authentication auth =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        System.out.println("AUTH = " + auth);
+        System.out.println("AUTHORITIES = " + auth.getAuthorities());
+
+        return "OK";
+    }
 
 
     // 🔓 Public API (no authentication required)

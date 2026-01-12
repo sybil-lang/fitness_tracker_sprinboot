@@ -10,10 +10,10 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 public class UserConfig {
 
-    @Bean
+//    @Bean
     public UserDetailsService userDetailsService(
             DataSource dataSource,
             PasswordEncoder passwordEncoder) {

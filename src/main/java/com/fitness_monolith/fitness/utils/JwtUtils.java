@@ -1,5 +1,4 @@
 package com.fitness_monolith.fitness.utils;
-
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -7,10 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
 import javax.crypto.SecretKey;
 import java.security.Key;
-import java.security.SignatureException;
 import java.util.Date;
 import java.util.List;
 
@@ -142,4 +139,52 @@ public class JwtUtils {
     }
 
 
+
+//    the below code is for Fitness app
+
+
+    public String generateToken(String userId, String role) {
+        return Jwts.builder()
+                .subject(userId)
+                .claim("role", role)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(key())
+                .compact();
+    }
+
+    public Claims getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith((SecretKey) key())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    public String getUserId(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    public String getRole(String token) {
+        return getClaims(token).get("role", String.class);
+    }
 }
+
+
+/*
+
+For implimenting JWT Auth we need below files :-
+
+1.JwtUtils -> helper class
+
+2.SecuritConfig -> centralized security config
+
+3.JwtAuthFilter-> filter for filterchain that intercepts every request for auth
+
+4.CustomUserDetailService: because we have custom user model
+
+
+
+
+
+* */

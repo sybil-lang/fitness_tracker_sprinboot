@@ -27,7 +27,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @Column(unique = true)
     private String email;
+
     private String password;
     private String firstName;
     private String lastName;
@@ -39,6 +41,10 @@ public class User {
     //  Automatically updated on every update
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+
+    @Enumerated
+    private UserRole role=UserRole.USER;
 
     /*
       One User → Many Activities

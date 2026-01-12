@@ -6,6 +6,7 @@ import com.fitness_monolith.fitness.model.User;
 import com.fitness_monolith.fitness.respositories.UserRepository;
 import com.fitness_monolith.fitness.service.UserService;
 import com.fitness_monolith.fitness.utils.JwtUtils;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,8 +35,9 @@ public class AuthController {
     }
 
 
+    //@Valid tells Spring => “Validate this object before calling the method”
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity<UserResponse> register(  @Valid @RequestBody RegisterRequest registerRequest){
         return ResponseEntity.ok(userService.register(registerRequest));
     }
 

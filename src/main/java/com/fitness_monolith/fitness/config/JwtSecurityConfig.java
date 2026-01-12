@@ -37,7 +37,13 @@ public class JwtSecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         // 🌍 Public endpoints
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+
+                        ).permitAll()
 
                         // 👑 Role-based access
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
